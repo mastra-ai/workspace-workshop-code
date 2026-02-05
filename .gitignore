@@ -8,6 +8,9 @@ dist
 *.db
 *.db-*
 
+# Generated sandbox profiles
+src/mastra/public/
+
 # Workshop generated files
 workshop-content/svg/
 workshop-content/sandbox/*.txt
