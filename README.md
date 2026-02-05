@@ -16,18 +16,28 @@ Learn how Mastra workspaces give agents the ability to work with files, execute 
    pnpm install
    ```
 
-3. Create a `.env` file with your API key:
+3. Create a `.env` file:
    ```bash
    cp .env.example .env
-   # Edit .env and add your ANTHROPIC_API_KEY
    ```
 
-4. Start the development server:
+4. Edit `.env` and set both variables:
+   ```bash
+   ANTHROPIC_API_KEY=your-api-key
+   WORKSHOP_CONTENT_PATH=/absolute/path/to/workshop-content
+   ```
+
+   For example, if you cloned to `~/projects/workspace-workshop-code`:
+   ```bash
+   WORKSHOP_CONTENT_PATH=/Users/yourname/projects/workspace-workshop-code/workshop-content
+   ```
+
+5. Start the development server:
    ```bash
    pnpm dev
    ```
 
-5. Open Mastra Studio at http://localhost:4111
+6. Open Mastra Studio at http://localhost:4111
 
 ## Workshop Overview
 

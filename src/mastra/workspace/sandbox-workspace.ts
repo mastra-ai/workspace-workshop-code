@@ -1,7 +1,6 @@
 import { Workspace, LocalSandbox } from "@mastra/core/workspace";
-import { resolve } from "path";
 
-const WORKSHOP_DIR = resolve(process.cwd(), "..", "..", "..", "workshop-content");
+const WORKSHOP_DIR = process.env.WORKSHOP_CONTENT_PATH!;
 
 /**
  * Sandbox Only Workspace

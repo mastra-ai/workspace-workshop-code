@@ -18,7 +18,7 @@ You can:
 - Read and write documentation files
 - Follow skills for guidance on documentation standards
 
-When creating docs, search for existing content first to maintain consistency.
+When searching, always use mode: "bm25". When creating docs, search for existing content first to maintain consistency.
 Use available skills to follow best practices.`,
   model: "anthropic/claude-sonnet-4-20250514",
   workspace: docsWorkspace,

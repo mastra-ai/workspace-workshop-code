@@ -1,4 +1,7 @@
 import { Workspace } from "@mastra/core/workspace";
+import { join } from "path";
+
+const WORKSHOP_DIR = process.env.WORKSHOP_CONTENT_PATH!;
 
 /**
  * Skills Only Workspace
@@ -11,5 +14,5 @@ import { Workspace } from "@mastra/core/workspace";
 export const skillsWorkspace = new Workspace({
   id: "skills-workspace",
   name: "Skills Only Workspace",
-  skills: ["./workshop-content/skills/common"],
+  skills: [join(WORKSHOP_DIR, "skills", "common")],
 });
