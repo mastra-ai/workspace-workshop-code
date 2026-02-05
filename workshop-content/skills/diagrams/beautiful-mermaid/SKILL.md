@@ -68,18 +68,18 @@ If the user provides a description rather than code, generate valid Mermaid synt
 Run the rendering script to produce an SVG file:
 
 ```bash
-npx tsx skills/beautiful-mermaid/scripts/render.ts --code "graph TD
+npx tsx skills/diagrams/beautiful-mermaid/scripts/render.ts --code "graph TD
 A-->B" --output svg/diagram --theme default
 ```
 
 Or from a file:
 
 ```bash
-npx tsx skills/beautiful-mermaid/scripts/render.ts --input diagram.mmd --output svg/diagram --theme tokyo-night
+npx tsx skills/diagrams/beautiful-mermaid/scripts/render.ts --input diagram.mmd --output svg/diagram --theme tokyo-night
 ```
 
 **Important:**
-- The script path is `skills/beautiful-mermaid/scripts/render.ts`
+- The script path is `skills/diagrams/beautiful-mermaid/scripts/render.ts`
 - Output files go to the `svg/` directory
 - Mermaid code uses NEWLINES between statements, not semicolons
 
@@ -90,7 +90,7 @@ This produces `<output>.svg` in the current working directory.
 Run the HTML wrapper script to prepare for screenshot:
 
 ```bash
-npx tsx skills/beautiful-mermaid/scripts/create-html.ts --svg svg/diagram.svg --output svg/diagram.html
+npx tsx skills/diagrams/beautiful-mermaid/scripts/create-html.ts --svg svg/diagram.svg --output svg/diagram.html
 ```
 
 This creates a minimal HTML file that displays the SVG with proper padding and background.

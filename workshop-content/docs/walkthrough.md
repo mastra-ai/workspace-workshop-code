@@ -291,14 +291,14 @@ Using the technical-writing skill, write a short document about workspace securi
 
 **Prompt:**
 ```
-Run the render script to create a diagram
+Execute this shell command: echo "hello"
 ```
 
 **Expected behavior:**
 - Agent should NOT have sandbox capability
-- Will say it cannot execute commands
+- Will clearly say it cannot execute commands or doesn't have that tool
 
-**What to notice:** Docs Assistant can't run scripts - that's what Diagram Agent is for.
+**What to notice:** Docs Assistant can't run commands - that's what Diagram Agent is for. The explicit command request makes the limitation clear.
 
 ---
 
