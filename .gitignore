@@ -7,4 +7,14 @@ dist
 .env
 *.db
 *.db-*
-svg/
+
+# Workshop generated files
+workshop-content/svg/
+workshop-content/sandbox/*.txt
+workshop-content/sandbox/*.js
+workshop-content/sandbox/*.ts
+workshop-content/notes.txt
+
+# skills.sh installed skills (keep .gitkeep)
+workshop-content/.agents/skills/*
+!workshop-content/.agents/skills/.gitkeep

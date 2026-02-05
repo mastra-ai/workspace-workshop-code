@@ -2,14 +2,26 @@ import { Mastra } from '@mastra/core/mastra';
 import { PinoLogger } from '@mastra/loggers';
 import { LibSQLStore } from '@mastra/libsql';
 import { Observability, DefaultExporter, CloudExporter, SensitiveDataFilter } from '@mastra/observability';
+
+// Workshop agents - each demonstrates different workspace capabilities
+import { fileManager } from './agents/file-manager';
+import { scriptRunner } from './agents/script-runner';
+import { skillGuide } from './agents/skill-guide';
+import { docsAssistant } from './agents/docs-assistant';
 import { diagramAgent } from './agents/diagram-agent';
-import { noSandboxAgent } from './agents/no-sandbox-agent';
+import { secureEditor } from './agents/secure-editor';
 
 export const mastra = new Mastra({
-  agents: { diagramAgent, noSandboxAgent },
+  agents: {
+    fileManager,
+    scriptRunner,
+    skillGuide,
+    docsAssistant,
+    diagramAgent,
+    secureEditor,
+  },
   storage: new LibSQLStore({
     id: "mastra-storage",
-    // stores observability, scores, ... into memory storage, if it needs to persist, change to file:../mastra.db
     url: ":memory:",
   }),
   logger: new PinoLogger({
@@ -21,11 +33,11 @@ export const mastra = new Mastra({
       default: {
         serviceName: 'mastra',
         exporters: [
-          new DefaultExporter(), // Persists traces to storage for Mastra Studio
-          new CloudExporter(), // Sends traces to Mastra Cloud (if MASTRA_CLOUD_ACCESS_TOKEN is set)
+          new DefaultExporter(),
+          new CloudExporter(),
         ],
         spanOutputProcessors: [
-          new SensitiveDataFilter(), // Redacts sensitive data like passwords, tokens, keys
+          new SensitiveDataFilter(),
         ],
       },
     },

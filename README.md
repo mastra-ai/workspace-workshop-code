@@ -1,104 +1,173 @@
-# workspaces-demo
+# Mastra Workspaces Workshop
 
-A demo project showcasing Mastra workspaces and skills with different capability levels. Uses Anthropic's Claude models.
+Learn how Mastra workspaces give agents the ability to work with files, execute commands, search content, and follow skills.
 
-## Getting Started
+## Prerequisites
 
-1. Install dependencies:
+- Node.js >= 22.13.0
+- An Anthropic API key
 
-```shell
-npm install
+## Setup
+
+1. Clone this repository
+
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+
+3. Create a `.env` file with your API key:
+   ```bash
+   cp .env.example .env
+   # Edit .env and add your ANTHROPIC_API_KEY
+   ```
+
+4. Start the development server:
+   ```bash
+   pnpm dev
+   ```
+
+5. Open Mastra Studio at http://localhost:4111
+
+## Workshop Overview
+
+This workshop demonstrates how workspace configurations control what agents can do. You'll explore 6 agents, each with different capabilities.
+
+## The Agents
+
+| Agent | Capabilities | What to Try |
+|-------|--------------|-------------|
+| **File Manager** | Filesystem only | "List all files", "Create a file called notes.txt" |
+| **Script Runner** | Sandbox only | "Run `ls -la`", "What version of node is installed?" |
+| **Skill Guide** | Skills only | "What skills are available?", "Tell me about the mastra skill" |
+| **Docs Assistant** | Filesystem + Skills + Search | "Search for info about sandboxes", "Write a doc following the technical-writing skill" |
+| **Diagram Agent** | Full workspace | "Create a mermaid diagram of workspace architecture and render it" |
+| **Secure Editor** | Full + Security | "Create a file" (requires approval), "Run a command" (requires approval) |
+
+## Workshop Path
+
+### Part 1: Understanding Isolated Capabilities
+
+Start with the single-capability agents to understand what each workspace feature provides:
+
+**1. File Manager** (Filesystem only)
+- Try: "List all files in the docs directory"
+- Try: "Read the overview.md file"
+- Try: "Create a new file called my-notes.txt with some content"
+- Notice: Cannot search or run commands
+
+**2. Script Runner** (Sandbox only)
+- Try: "Run `pwd` to see the working directory"
+- Try: "Run `ls -la` to list files"
+- Try: "Check what node version is installed"
+- Notice: Can run commands but cannot read/write files through workspace tools
+
+**3. Skill Guide** (Skills only)
+- Try: "What skills do you have access to?"
+- Try: "Tell me about the mastra skill"
+- Try: "Activate the mastra skill and explain how agents work"
+- Notice: Can only see skills in `/skills/common` path
+
+### Part 2: Combined Capabilities
+
+**4. Docs Assistant** (Filesystem + Skills + Search)
+- Try: "Search for documentation about security"
+- Try: "What skills are available to you?"
+- Try: "Write a new doc about workspaces following the technical-writing skill"
+- Notice: Has writing skills that File Manager doesn't have
+- Notice: Cannot execute commands (try asking it to run a script)
+
+### Part 3: Full Workspace
+
+**5. Diagram Agent** (Full workspace)
+- Try: "Create a mermaid diagram showing the workspace architecture"
+- Try: "Render the diagram to SVG"
+- Try: "Search for skills related to diagrams"
+- Notice: Has diagram skills and can execute the render script
+- Notice: Can also install skills from skills.sh
+
+### Part 4: Security Controls
+
+**6. Secure Editor** (Full + Security)
+- Try: "Create a new file" - You'll be prompted to approve
+- Try: "Delete a file" - You'll be prompted to approve
+- Try: "Run a command" - You'll be prompted to approve
+- Notice: Same capabilities as Diagram Agent, but with guardrails
+
+## Key Concepts
+
+### Workspace Components
+
+| Component | What it provides |
+|-----------|------------------|
+| **Filesystem** | Read, write, list, delete files within a scoped directory |
+| **Sandbox** | Execute shell commands in a controlled environment |
+| **Search** | BM25 keyword search over indexed content |
+| **Skills** | Discoverable SKILL.md files with instructions for agents |
+
+### Skills Paths
+
+Different agents have access to different skills based on their configured paths:
+
+```
+workshop-content/skills/
+├── common/           # Shared by all skill-enabled agents
+│   └── mastra/
+├── writing/          # Docs Assistant only
+│   └── technical-writing/
+└── diagrams/         # Diagram Agent only
+    └── beautiful-mermaid/
 ```
 
-2. Copy the example environment file and add your Anthropic API key:
+### Security Controls
 
-```shell
-cp .env.example .env
-```
-
-Then edit `.env` and add your [Anthropic API key](https://console.anthropic.com/).
-
-3. Start the development server:
-
-```shell
-npm run dev
-```
-
-Open [http://localhost:4111](http://localhost:4111) in your browser to access [Mastra Studio](https://mastra.ai/docs/getting-started/studio).
-
-## Agents
-
-This project includes two agents that demonstrate how workspace capabilities affect what an agent can do.
-
-### diagram-agent.ts (Full Capabilities)
-
-- **Workspace:** [`diagram-workspace`](src/mastra/workspace/diagram-workspace.ts)
-- **Skills:** `mastra`, `beautiful-mermaid`
-- **Filesystem:** ✅ Can read/write files
-- **Sandbox:** ✅ Can execute scripts
-- **Search:** ✅ BM25 keyword search
-- **Tool Configuration:** This workspace demonstrates per-tool configuration using `WORKSPACE_TOOLS` constants:
+The Secure Editor demonstrates per-tool configuration:
 
 ```typescript
 tools: {
+  [WORKSPACE_TOOLS.FILESYSTEM.WRITE_FILE]: {
+    requireApproval: true,
+    requireReadBeforeWrite: true,
+  },
+  [WORKSPACE_TOOLS.FILESYSTEM.DELETE]: {
+    requireApproval: true,
+  },
   [WORKSPACE_TOOLS.SANDBOX.EXECUTE_COMMAND]: {
-    requireApproval: true
-  }
+    requireApproval: true,
+  },
 }
 ```
 
-This agent has full capabilities. It can search indexed docs, create Mermaid diagrams, write `.mmd` files, and run the render script to produce SVG output.
+## Project Structure
 
-The agent can freely use most tools (search, read/write files) but must get user approval before executing scripts. This is useful because skills like beautiful-mermaid use scripts to render diagrams — requiring approval lets users review commands before they run.
+```
+src/mastra/
+├── agents/           # Agent definitions
+├── workspace/        # Workspace configurations
+└── index.ts          # Mastra initialization
 
-### no-sandbox-agent.ts (Limited Capabilities)
-
-- **Workspace:** [`no-sandbox-workspace`](src/mastra/workspace/no-sandbox-workspace.ts)
-- **Skills:** `mastra`, `beautiful-mermaid`
-- **Filesystem:** ✅ Can read/write files
-- **Sandbox:** ❌ Cannot execute scripts
-- **Search:** ✅ BM25 keyword search
-
-This agent has limited capabilities and can access skills, search indexed docs, and write files, but cannot execute scripts. When asked to render a diagram, it can only write the `.mmd` file—it cannot run the render script to produce an SVG.
-
-## Example Prompt
-
-Try this prompt with both agents to see the difference:
-
-> Create a diagram explaining how Mastra workspace skills can be used
-
-- **diagram-agent:** Will render the diagram directly to SVG
-- **no-sandbox-agent:** Can only write the `.mmd` file, cannot run the render script to produce SVG
-
-To clean up generated SVG files between tests:
-
-```shell
-npm run clean
+workshop-content/
+├── docs/             # Documentation (indexed for search)
+├── skills/           # Local skills organized by category
+│   ├── common/       # Shared skills
+│   ├── writing/      # Documentation skills
+│   └── diagrams/     # Diagram skills
+├── sandbox/          # Working directory for commands
+└── .agents/skills/   # Skills installed from skills.sh
 ```
 
-## Skills
+## Next Steps
 
-Both agents have access to the same skills in `/skills`:
+After completing the workshop:
 
-- [**mastra**](https://skills.sh/mastra-ai/skills/mastra) - Knowledge about Mastra framework concepts
-- [**beautiful-mermaid**](https://skills.sh/intellectronica/agent-skills/beautiful-mermaid) - Tools and instructions for rendering Mermaid diagrams to SVG
+1. **Create your own workspace** - Combine capabilities for your use case
+2. **Add custom skills** - Create SKILL.md files for your workflows
+3. **Explore skills.sh** - Install additional skills from the community
+4. **Configure security** - Set up approval workflows for sensitive operations
 
-## Search
+## Resources
 
-Both workspaces have BM25 keyword search enabled, allowing agents to search indexed content without external dependencies.
-
-**Configuration:**
-
-```typescript
-bm25: true,
-autoIndexPaths: ['/docs', '/skills'],
-```
-
-**Indexed content:**
-
-- `/docs` - Mastra workspace documentation (overview, filesystem, sandbox, search, skills)
-- `/skills` - All skill files and references
-
-When the workspace initializes, files in these directories are automatically indexed. Agents receive a search tool they can use to find relevant content by keyword.
-
-**Example:** An agent asked to create a diagram about "workspace sandboxes" can search the indexed docs to find accurate information before generating the diagram.
+- [Mastra Documentation](https://mastra.ai/docs)
+- [Workspace Reference](https://mastra.ai/docs/workspace/overview)
+- [Skills Specification](https://agentskills.io)
+- [skills.sh Directory](https://skills.sh)
