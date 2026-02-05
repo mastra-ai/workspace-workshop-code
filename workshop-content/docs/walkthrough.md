@@ -377,6 +377,77 @@ Search for information about mermaid themes
 
 ---
 
+### Exercise 3.2: Installing Skills from skills.sh
+
+**Workspace capabilities:** The Diagram Agent's workspace includes `/.agents/skills` path, which enables installing community skills from skills.sh
+
+**Location:** Workspaces > Full Workspace (Diagram Agent) > Skills tab
+
+#### Task 1: Open the Workspace Skills page
+
+1. Click **Workspaces** in the Mastra Studio sidebar
+2. Select **Full Workspace (Diagram Agent)** from the dropdown
+3. Click the **Skills** tab
+
+**What to notice:** You should see the existing skills (mastra, beautiful-mermaid) and an **Add Skill** button.
+
+#### Task 2: Browse available skills
+
+1. Click **Add Skill**
+2. Browse the **Popular Skills** list
+
+**What to notice:** skills.sh is a community repository of skills. Each skill shows its download count and source repository.
+
+#### Task 3: Search and preview a skill
+
+1. In the search box, type `pdf`
+2. Click on **pdf** from **anthropics/skills**
+3. Review the preview panel
+
+**Expected behavior:**
+- Preview shows skill name, description, and documentation
+- Shows install count and GitHub link
+- Install and Cancel buttons appear
+
+**What to notice:** You can preview skill documentation before installing to understand what it provides.
+
+#### Task 4: Install a skill
+
+1. With the pdf skill selected, click **Install**
+2. Wait for the success message
+
+**Expected behavior:**
+- Toast appears: "Skill 'pdf' installed successfully (X files)"
+- The skill now appears in the Skills list
+
+**What to notice:** Skills are installed to the `/.agents/skills` directory within the workspace.
+
+#### Task 5: Verify the agent can use the skill
+
+1. Navigate to **Agents > Diagram Agent**
+2. Send the message: `What skills are available?`
+
+**Expected behavior:**
+- Agent lists skills including the newly installed **pdf** skill
+- The skill is immediately available without restarting
+
+**What to notice:** Installed skills are dynamically loaded and immediately available to agents whose workspace includes the `/.agents/skills` path.
+
+#### Task 6: Test the installed skill
+
+**Prompt:**
+```
+Activate the pdf skill and explain what it can help with
+```
+
+**Expected behavior:**
+- Agent reads the pdf skill's SKILL.md
+- Explains PDF processing capabilities (reading, extracting, merging, etc.)
+
+**What to notice:** Community skills follow the same SKILL.md format as local skills.
+
+---
+
 ## Part 4: Security Controls
 
 How workspace security features work.
@@ -506,6 +577,18 @@ This is expected behavior when testing boundaries. The agent correctly understan
 - Make sure you're using Secure Editor, not Diagram Agent
 - Check the browser - prompts appear in Mastra Studio UI
 
+### Add Skill button doesn't appear
+
+- Only workspaces with `/.agents/skills` in their skill paths show the Add Skill button
+- The Diagram Agent's workspace has this configured; other workspaces don't
+- Check `src/mastra/workspace/diagram-workspace.ts` to see the configuration
+
+### Installed skill not showing for agent
+
+- Make sure the agent's workspace includes `/.agents/skills` in its skill paths
+- Skills are installed to the workspace's `/.agents/skills` directory
+- Only agents with that path configured will see installed skills
+
 ---
 
 ## Key Takeaways
@@ -520,6 +603,8 @@ This is expected behavior when testing boundaries. The agent correctly understan
 
 5. **Search indexes configured paths** - BM25 search works over the `autoIndexPaths` directories
 
+6. **skills.sh extends agent capabilities** - Install community skills through the UI when workspace includes `/.agents/skills` path
+
 ---
 
 ## Next Steps
@@ -529,4 +614,5 @@ After completing this workshop:
 1. Look at the workspace configurations in `src/mastra/workspace/` to see how each is defined
 2. Create your own workspace combining capabilities for your use case
 3. Write a custom SKILL.md for your workflow
-4. Explore skills.sh for community skills you can install
+4. Browse [skills.sh](https://skills.sh) for more community skills to install
+5. Publish your own skills to skills.sh for others to use
