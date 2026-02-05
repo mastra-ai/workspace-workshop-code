@@ -15,3 +15,6 @@ for (const workspace of workspaces) {
     console.error(`✗ Failed to initialize workspace ${workspace.id}:`, error);
   }
 }
+
+// Export to prevent tree-shaking
+export const workspacesInitialized = true;
