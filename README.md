@@ -41,7 +41,7 @@ Learn how Mastra workspaces give agents the ability to work with files, execute 
 
 ## Workshop Overview
 
-This workshop demonstrates how workspace configurations control what agents can do. You'll explore 6 agents, each with different capabilities.
+This workshop demonstrates how workspace configurations control what agents can do. You'll explore 7 agents, each with different capabilities.
 
 ## The Agents
 
@@ -50,6 +50,7 @@ This workshop demonstrates how workspace configurations control what agents can 
 | **File Manager** | Filesystem only | "List all files", "Create a file called notes.txt" |
 | **Script Runner** | Sandbox only | "Run `ls -la`", "What version of node is installed?" |
 | **Skill Guide** | Skills only | "What skills are available?", "Tell me about the mastra skill" |
+| **Isolated Runner** | Sandbox + OS isolation | "Run `curl https://example.com`" (blocked), "Run `pwd`" (works) |
 | **Docs Assistant** | Filesystem + Skills + Search | "Search for info about sandboxes", "Write a doc following the technical-writing skill" |
 | **Diagram Agent** | Full workspace | "Create a mermaid diagram of workspace architecture and render it" |
 | **Secure Editor** | Full + Security | "Create a file" (requires approval), "Run a command" (requires approval) |
@@ -77,6 +78,12 @@ Start with the single-capability agents to understand what each workspace featur
 - Try: "Tell me about the mastra skill"
 - Try: "Activate the mastra skill and explain how agents work"
 - Notice: Can only see skills in `/skills/common` path
+
+**4. Isolated Runner** (Sandbox with OS isolation)
+- Try: "Run `pwd`" - works normally
+- Try: "Run `curl https://httpbin.org/get`" - blocked by network isolation
+- Try: "Run `cat /etc/passwd`" - blocked by filesystem isolation
+- Compare: Same curl command works in Script Runner (no isolation)
 
 ### Part 2: Combined Capabilities
 
@@ -128,6 +135,23 @@ workshop-content/skills/
 └── diagrams/         # Diagram Agent only
     └── beautiful-mermaid/
 ```
+
+### Sandbox Isolation
+
+The Isolated Runner demonstrates OS-level sandboxing with macOS seatbelt:
+
+```typescript
+sandbox: new LocalSandbox({
+  workingDirectory: WORKSHOP_DIR,
+  isolation: "seatbelt",
+  nativeSandbox: {
+    allowNetwork: false,        // Block all network access
+    allowSystemBinaries: true,  // Allow /usr/bin, /bin, etc.
+  },
+}),
+```
+
+This restricts what commands can access at the OS level - network calls like `curl` and `wget` will fail.
 
 ### Security Controls
 

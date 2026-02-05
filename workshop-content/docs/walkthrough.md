@@ -28,7 +28,7 @@ A detailed, step-by-step guide for completing the Mastra Workspaces Workshop.
 
 4. Open Mastra Studio at http://localhost:4111
 
-5. You should see 6 agents listed in the sidebar
+5. You should see 7 agents listed in the sidebar
 
 ## Part 1: Single-Capability Agents
 
@@ -231,6 +231,53 @@ Activate the technical-writing skill
 - The Skill Guide only has access to `/skills/common`, not `/skills/writing`
 
 **What to notice:** Skill paths control which skills are visible to each agent.
+
+---
+
+### Exercise 1.4: Isolated Runner (Sandbox with OS Isolation)
+
+**Workspace capabilities:** Sandbox with native OS-level isolation (seatbelt on macOS, bwrap on Linux)
+
+**Agent location:** Click "Isolated Runner" in the Mastra Studio sidebar
+
+#### Task 1: Run a basic command
+
+**Prompt:**
+```
+Run pwd to show the current directory
+```
+
+**Expected behavior:**
+- Agent executes the command successfully
+- Returns the workshop-content directory path
+
+**What to notice:** Basic commands work the same as the regular Script Runner.
+
+#### Task 2: Test network isolation
+
+**Prompt:**
+```
+Run: curl -s https://httpbin.org/get
+```
+
+**Expected behavior:**
+- Command fails with a network error (exit code 6)
+- The sandbox blocks all network access
+
+**What to notice:** The `allowNetwork: false` setting prevents any outbound connections.
+
+#### Task 3: Compare with Script Runner
+
+**Prompt:** (Use Script Runner for this one)
+```
+Run: curl -s https://httpbin.org/get
+```
+
+**Expected behavior:**
+- In Script Runner: The command succeeds and returns JSON data
+- This shows the difference between isolated and non-isolated sandboxes
+
+**What to notice:** Without isolation, the sandbox has full system access. With isolation, network calls fail.
 
 ---
 
@@ -601,9 +648,11 @@ This is expected behavior when testing boundaries. The agent correctly understan
 
 4. **Security is per-tool** - You can require approval for specific operations while leaving others unrestricted
 
-5. **Search indexes configured paths** - BM25 search works over the `autoIndexPaths` directories
+5. **Sandbox isolation adds OS-level restrictions** - Use `seatbelt` (macOS) or `bwrap` (Linux) to restrict network access
 
-6. **skills.sh extends agent capabilities** - Install community skills through the UI when workspace includes `/.agents/skills` path
+6. **Search indexes configured paths** - BM25 search works over the `autoIndexPaths` directories
+
+7. **skills.sh extends agent capabilities** - Install community skills through the UI when workspace includes `/.agents/skills` path
 
 ---
 

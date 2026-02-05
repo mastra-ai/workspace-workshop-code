@@ -13,6 +13,7 @@ import { skillGuide } from './agents/skill-guide';
 import { docsAssistant } from './agents/docs-assistant';
 import { diagramAgent } from './agents/diagram-agent';
 import { secureEditor } from './agents/secure-editor';
+import { isolatedRunner } from './agents/isolated-runner';
 
 export const mastra = new Mastra({
   agents: {
@@ -22,6 +23,7 @@ export const mastra = new Mastra({
     docsAssistant,
     diagramAgent,
     secureEditor,
+    isolatedRunner,
   },
   storage: new LibSQLStore({
     id: "mastra-storage",
