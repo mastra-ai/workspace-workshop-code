@@ -1,0 +1,35 @@
+{
+  "name": "workspaces-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "mastra dev",
+    "build": "mastra build",
+    "start": "mastra start",
+    "clean": "rm -f diagram-demo/svg/*.svg diagram-demo/svg/*.mmd"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "dependencies": {
+    "@mastra/core": "^1.1.0",
+    "@mastra/evals": "^1.0.1",
+    "@mastra/libsql": "^1.1.0",
+    "@mastra/loggers": "^1.0.1",
+    "@mastra/memory": "^1.0.1",
+    "@mastra/observability": "^1.1.0",
+    "beautiful-mermaid": "^0.1.3",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.2.0",
+    "mastra": "^1.1.0",
+    "typescript": "^5.9.3"
+  }
+}

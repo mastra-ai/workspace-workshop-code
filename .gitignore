@@ -1,0 +1,10 @@
+output.txt
+node_modules
+dist
+.mastra
+.claude
+.env.development
+.env
+*.db
+*.db-*
+svg/
